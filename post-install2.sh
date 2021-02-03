@@ -21,13 +21,13 @@ sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_c
 
 dpkg -i /home/gogodev/mysql-apt-config_0.8.16-1_all.deb
 echo "Updating APT..."
+apt-get update
 apt -yq install mysql-server
 
-#apt-get update
 #mysql_secure_installation
 mysqladmin --user=root password "2011Ggg2"
 mysql --user=root --password=2011Ggg2 < file.sql
-sudo sed -i 's/^bind-address.*/bind-address = 192.168.1.3/' /etc/mysql/mysql.conf.d/mysqld.cnf
+sudo sed -i 's/^bind-address.*/bind-address = 192.168.1.63/' /etc/mysql/mysql.conf.d/mysqld.cnf
 echo "Updated mysql bind address in the good file to my VM to allow external connections."
 systemctl restart mysql
 

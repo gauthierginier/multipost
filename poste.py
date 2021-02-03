@@ -13,8 +13,8 @@ def connexionbdd(host, db, us, pw):
             password=pw)
         cursor = connection.cursor()
         print("connexion reussie")
-        ajout_client(connection, cursor, 0, "kellian", "kellian@wtf.hard", "12 rue des platanes", "34000", "MTP", "0690123456")
-        montrer_client(cursor, "kellian")
+        ajout_client(connection, cursor, 0, "gauthier", "moimeme@gmail.mdr", "12 rue des manguiers", "97190", "Gosier", "0690899856")
+        montrer_client(cursor, "")
         if (connection.is_connected()):
             cursor.close()
             connection.close()
@@ -96,7 +96,7 @@ def connexionbdd(host, db, us, pw):
 def ajout_client(connection, cursor, pro, nom, email, adresse, cp, ville, tel):
     cursor.execute('INSERT INTO client (entreprise, nom, email, adresse, codepostal, ville, tel) VALUES (%s,%s,%s,%s,%s,%s,%s);', (pro, nom, email, adresse, cp, ville, tel))
     connection.commit()
-    print(cursor.rowcount, "record inserted.")
+    print(cursor.rowcount, "ligne(s) ajoutée(s).")
 # OK rechercher un client en fournissant son nom et/ou son email
 def montrer_client(cursor, nom):
     cursor.execute("""SELECT * FROM client WHERE nom LIKE %s """, (nom+'%',))
@@ -122,4 +122,4 @@ def montrer_client(cursor, nom):
 
 
 if __name__ == "__main__":
-    sys.exit(connexionbdd("192.168.1.3", "multipost", "machine", "aZeRtY123!" ))
+    sys.exit(connexionbdd("192.168.1.63", "multipost", "machine", "aZeRtY123!" ))

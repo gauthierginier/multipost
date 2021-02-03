@@ -26,8 +26,8 @@ CREATE TABLE lignes (
     numfacture INT,
     FOREIGN KEY (numfacture) REFERENCES facture(id));
 
-CREATE USER IF NOT EXISTS 'machine'@'192.168.1.5' IDENTIFIED WITH mysql_native_password BY 'aZeRtY123!';
-GRANT ALL ON multipost.* TO 'machine'@'192.168.1.5';
+CREATE USER IF NOT EXISTS 'machine'@'192.168.1.62' IDENTIFIED WITH mysql_native_password BY 'aZeRtY123!';
+GRANT ALL ON multipost.* TO 'machine'@'192.168.1.62';
 FLUSH PRIVILEGES;
 
 SHOW DATABASES; 
