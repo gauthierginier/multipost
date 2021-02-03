@@ -8,12 +8,14 @@ from getpass import getpass
 #Parser utilisateur : 
 parsed = argparse.ArgumentParser()
 parsed.add_argument("-con", "--connexionfile",
-                    help="Calculer un prix à partir de chaque ligne",action="store_true", required=False )
+                    help="Se connecter à l'aide d'un fichier",action="store_true", required=False )
 parsed.add_argument("-a", "--ajout_client", help="increase output verbosity",
                     action="store_true", required=False)
 parsed.add_argument("-m", "--modif_client", nargs=1, help="increase output verbosity", required=False)
 parsed.add_argument("-c","--client_info",
                     nargs=1, help="rechercher un client en fournissant son nom/email", required=False)
+parsed.add_argument("-f","--facture_info",
+                    nargs=1, help="rechercher une facture en fournissant son numéro", required=False)
 args = parsed.parse_args()
 
 
@@ -45,6 +47,8 @@ def connexionbdd():
             modif_client(connection, cursor, args.modif_client[0])
         if args.client_info:
             montrer_client(cursor, args.client_info[0])
+        if args.facture_info:
+            montrer_client(cursor, args.facture_info[0])
         if (connection.is_connected()):
             cursor.close()
             connection.close()
@@ -91,6 +95,11 @@ def modif_client(connection, cursor, client):
         WHERE id = %s ;""", (pro, nom, email, adresse, cp, ville, tel, client))
     connection.commit()
     print(cursor.rowcount, "ligne(s) modifiée(s).")
+def montrer_facture(cursor, id):
+    cursor.execute("""SELECT * FROM client WHERE id LIKE %s""", (id,))
+    response = cursor.fetchall()
+    for row in response:
+        print(row)
 
 if __name__ == "__main__":
     sys.exit(connexionbdd())
