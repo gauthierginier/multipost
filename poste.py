@@ -3,26 +3,34 @@ import mysql.connector
 from mysql.connector import Error
 import argparse
 import logging
+from getpass import getpass
 
 #Parser utilisateur : 
 parsed = argparse.ArgumentParser()
-# parsed.add_argument("-v", "--creerfacture", help="Créer facture")
-# parsed.add_argument("-f", "--facture", help="Générer un numéro de facture unique")    
-# parsed.add_argument("-d","--date_client",help="Générer une date d'émission client" )
-# parsed.add_argument("-c","calcul",help="Calculer un prix à partir de chaque ligne" )
-# parsed.add_argument("-s","--somme",help="effectuer la somme de toutes les valeurs de la table")
-# parsed.add_argument("-r", "--rechercher" , help="rechercher une facture par son numéro")
-# parsed.add_argument("-rechercher_date",help="Rechercher une facture par numéro et par date")
-# parsed.add_argument("rechercher_fature_date", help="rechercher toutes les factures émises entre deux dates")
+parsed.add_argument("-con", "--connexionfile",
+                    help="Calculer un prix à partir de chaque ligne",action="store_true", required=False )
 parsed.add_argument("-a", "--ajout_client", help="increase output verbosity",
                     action="store_true", required=False)
 parsed.add_argument("-m", "--modif_client", nargs=1, help="increase output verbosity", required=False)
-# parsed.add_argument("-m",help="modifier les informations d'un client")
-parsed.add_argument("-c","--client_info",nargs=1, help="rechercher un client en fournissant son nom/email")
-# parsed.add_argument("-s" , help="Supprimer des enregistrements")
+parsed.add_argument("-c","--client_info",
+                    nargs=1, help="rechercher un client en fournissant son nom/email", required=False)
 args = parsed.parse_args()
 
-def connexionbdd(host, db, us, pw):
+
+def connexionbdd():
+    if args.connexionfile:
+        with open("./loginfile.txt") as connexiondata:
+            response = connexiondata.readlines()
+            host = response[0].strip()
+            db = response[1].strip()
+            us = response[2].strip()
+            pw = response[3].strip()
+    else:
+        host = input("Entrez l'adresse ip de votre serveur :\n")
+        db = input("Entrez le nom de votre bdd :\n")
+        us = input("Entrez votre identifiant :\n")
+        pw = getpass(prompt='Entrez votre mot de passe : ')
+    
     try:
         connection = mysql.connector.connect(
             host=host,
@@ -44,62 +52,6 @@ def connexionbdd(host, db, us, pw):
     except Exception as e:
         print(e)
         
-
-
-
-# Def "montant total" par défaut calculé à partir des prix de chaque ligne: 
-# def montant_total_lignes():
-#   SELECT SUM (montant_total_facture)
-#   FROM factures
-
-# #effectuer la somme de toutes les valeurs de la table :
-# #montant total (par défaut : calculé à partir des prix de chaque ligne)
-# def somme_toutes_valeurs_table():
-#   SELECT SUM(prix_unite  VALUE2) FROM factures
-#   SUM(VALUE1 + VALUE2)
-
-
-
-# #Def Générer une date d'émission client
-# def date_emission_client():
-#   cursor.execute (SELECT type_client, raison_sociale, email, adresse, tel
-#   FROM facture)
-#   rows = cursor.fetchall()
-#   for row in rows:
-#     print('{0} : {1} - {2}'.format(row[0], row[1], row[2]))
-
-
-# #Recherche facture par numéro et par date dans la bd
-# def facture_numero_date ():
-# #date
-#   SELECT *, DATE_FORMAT(date_inscription, "%d/%m/%Y")
-#   FROM facture AND ;
-
-
-# # rechercher toutes les factures émises entre deux dates
-# def facture_entre_deux_dates():
-#   SELECT * FROM `table1`
-#   INTERSECT
-#   SELECT * FROM `table2`
-
-
-
-
-
-
-
-
-
-# OK Ajouter une facture 
-#  cursor.execute('INSERT INTO factures (type_client, raison_sociale, email, adresse, tel) VALUES (?,?,?,?,?,?,?,?)', (addf[0],addf[1],addf[2],addf[3], addf[4], addf[5],addf[6],addf[7]))
-
-
-# #OK Supprimer des enregistrements dans la base de données
-# def supprimer_enregistrement_bd(cursor):
-#   cursor.execute("""DELETE FROM 'factures' """") 
-
-
-# OK Ajouter un client manuellement
 def ajout_client(connection, cursor):
     print("MERCI DE RENSEIGNER LES INFOS DU NOUVEAU CLIENT :")
     pro = int(input("""ENTREZ 1 POUR UNE ENTREPRISE,\nOU 0 POUR UN PARTICULIER\n"""))
@@ -140,22 +92,5 @@ def modif_client(connection, cursor, client):
     connection.commit()
     print(cursor.rowcount, "ligne(s) modifiée(s).")
 
-#OK rechercher une facture par numéro
-# def facture_numero ():
-#   cursor.execute("""SELECT  FROM factures WHERE '?' """, (rechf))
-
-
-# #OK modifier les infos d'un client
-# def modification_client():
-#   cursor.execute("""UDPDATE client SET '?' = '?' WHERE '?' """, (modc[0], modc[1], modc[3]))
-
-
-
-
-
-# #Gestion des erreurs : 
-# # Veuillez saisir un argument 
-
-
 if __name__ == "__main__":
-    sys.exit(connexionbdd("192.168.1.63", "multipost", "machine", "aZeRtY123!" ))
+    sys.exit(connexionbdd())
